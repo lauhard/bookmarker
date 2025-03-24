@@ -70,7 +70,13 @@ jobs:
 
             - name: Pull and Deploy
               run: /
-                ssh ${{ secrets.USERNAME }}@${{ secrets.RASPBI_IP }} "cd /home/andreas/dev01 && mkdir -p bookmarker && cd bookmarker && git pull origin main
-
+                ssh ${{ secrets.USERNAME }}@${{ secrets.RASPBI_IP }} <<'EOF'
+                    cd /home/andreas/dev01
+                    mkdir -p bookmarker
+                    cd bookmarker
+                    git pull origin main
+                    docker compose build
+                    docker compose up -d
+                EOF
 
 
