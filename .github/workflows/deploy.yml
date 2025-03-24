@@ -69,7 +69,7 @@ jobs:
             ## create the project folder on the raspberry pi and pull the project and build it
 
             - name: Pull and Deploy
-              run: /
+              run: |
                 ssh ${{ secrets.USERNAME }}@${{ secrets.RASPBI_IP }} <<'EOF'
                     cd /home/andreas/dev01
                     mkdir -p bookmarker
