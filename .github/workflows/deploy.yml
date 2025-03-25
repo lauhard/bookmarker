@@ -71,15 +71,11 @@ jobs:
             - name: Pull And Deploy
               run: |
                 ssh ${{ secrets.USERNAME }}@${{ secrets.RASPBI_IP }} "
-                if [ -d /home/andreas/dev01/bookmarker/.git ]; then
-                    echo '🔄 Repo exists, pulling...'
-                    cd /home/andreas/dev01/bookmarker &&
-                    git pull origin main
-                else
+               
                     echo '📥 Cloning repo...'
                     cd /home/andreas/dev01 &&
-                    git clone git@github.com:lauhard/bookmarker.git bookmarker
-                fi
+                    sudo git clone git@github.com:lauhard/bookmarker.git
+                
 
                 cd /home/andreas/dev01/bookmarker &&
                 docker compose build &&
