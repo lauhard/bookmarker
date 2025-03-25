@@ -1,7 +1,9 @@
 FROM node:22 as builder
 WORKDIR /app
-COPY package.*json ./
-RUN npm ci
+#copy package.json and package-lock.json explicitly
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm instal
 COPY . .
 RUN npm run build
 
