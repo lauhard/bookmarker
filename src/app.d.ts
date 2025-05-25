@@ -18,6 +18,12 @@ declare global {
             id?: string
         };
 
+        interface Bookmark {
+            id: string;
+            title: string;
+            url: string;
+        }
+
         // interface Error {}
         // interface Locals {}
         // interface PageData {}
@@ -26,4 +32,4 @@ declare global {
     }
 }
 
-export { Locals, User };
+export { Locals, User, Bookmark };

@@ -3,9 +3,10 @@
     const user = getUserState();
 </script>
 
-<section>
-    <h1><span class="userName">{user.name}</span> Bookmarks</h1>
+<section class="section-base">
+    <h1><span class="userName">{user.name}</span> Dashboard</h1>
 </section>
 
 <style lang="scss">
+
 </style>

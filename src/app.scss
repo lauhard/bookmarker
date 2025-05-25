@@ -22,19 +22,20 @@ html, body {
 .userName {
     text-transform: capitalize;
 }
-.section {
+.section-base {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     align-self: center;
     height: 100%;
     padding-inline: var(--side);
     max-width: var(--content-width);
+    width: 100%;
     box-sizing: border-box;
-    text-align: center;
     margin-top: 1rem;
     padding: 1.5rem 2rem;
+    background-color: rgba(27, 24, 24, 0.521);
+    border-radius: 1rem;
+    min-height: 200px;
 }
 h1{
     font-size: 2.5rem;
