@@ -3,6 +3,8 @@ import { svelteKitHandler } from "better-auth/svelte-kit";
 import type { User } from "./app";
 
 export const handle = async ({ event, resolve }) => {
+    console.log('HOOKS ausgeführt für:', event.url.pathname);
+
     const session = await auth.api.getSession({
         headers: event.request.headers
     })

@@ -3,6 +3,8 @@ import { LoginUser } from "$lib/zod";
 import { fail, redirect } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async (event) => {
+
+    console.log("Request Origin:", event.request.headers.get("origin"));
     if (event.locals.user || event.cookies.get("better-auth.session_token")) {
         // User is already logged in, redirect to home or another page
         throw redirect(302, "/");

@@ -1,11 +1,10 @@
-import { env } from "$env/dynamic/private";
+import { API_URL } from "$env/static/private";
 import type { PageServerLoad } from "../$types";
 import type { Bookmark } from "../../../app";
 
-export const load: PageServerLoad = async ({ params, fetch, locals }) => {
+export const load: PageServerLoad = async ({ params, fetch }) => {
     console.log("Loading bookmark with slug:", params);
-    const API_URL = env.API_URL;
-    const bookmarkID = params?.slug;
+    const bookmarkID = params?.slug as string | undefined;
     // fetch bookmkark from api
     if (bookmarkID == 'add') {
         return {
@@ -24,7 +23,7 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
             //Authorization: `Bearer ${locals.token}`,
             "Content-Type": "application/json",
             "X-Requested-With": "XMLHttpRequest",
-            "X-CSRF-Token": locals?.csrfToken || "", // Use CSRF token from locals if available
+            //"X-CSRF-Token": locals?.csrfToken || "", // Use CSRF token from locals if available
         },
     });
     const data = await response.json();
@@ -54,7 +53,7 @@ export const actions = {
         let newBookmarkID = null;
         //post the bookmark to the API
         try {
-            const response = await fetch(`${env.API_URL}/api/bookmarks`, {
+            const response = await fetch(`${API_URL}/api/bookmarks`, {
                 method: "POST",
                 mode: "cors",
                 cache: "no-cache",
@@ -63,7 +62,7 @@ export const actions = {
                 headers: {
                     "Content-Type": "application/json",
                     "X-Requested-With": "XMLHttpRequest",
-                    "X-CSRF-Token": locals?.csrfToken || "", // Use CSRF token from locals if available
+                    //"X-CSRF-Token": locals?.csrfToken || "", // Use CSRF token from locals if available
                 },
                 body: JSON.stringify(bookmark),
             });
@@ -96,7 +95,7 @@ export const actions = {
             page_title: formData.get("title") as string,
         }
         try {
-            const response = await fetch(`${env.API_URL}/api/bookmarks/${bookmarkID}`, {
+            const response = await fetch(`${API_URL}/api/bookmarks/${bookmarkID}`, {
                 method: "PATCH",
                 mode: "cors",
                 cache: "no-cache",
@@ -105,7 +104,7 @@ export const actions = {
                 headers: {
                     "Content-Type": "application/json",
                     "X-Requested-With": "XMLHttpRequest",
-                    "X-CSRF-Token": locals?.csrfToken || "", // Use CSRF token from locals if available
+                    //"X-CSRF-Token": locals?.csrfToken || "", // Use CSRF token from locals if available
                 },
                 body: JSON.stringify(bookmark),
             });
@@ -115,7 +114,7 @@ export const actions = {
                 console.error("Error creating bookmark:", data);
                 throw new Error("Failed to create bookmark");
             }
-            console.log("Updated bookmark dataxxxx:", bookmarkID);
+            console.log("Updated bookmark data:", bookmarkID);
 
         } catch (error) {
             console.error("Error creating bookmark:", error);
@@ -127,14 +126,14 @@ export const actions = {
             bookmarkID: bookmarkID, // Return the new bookmark ID
         }
     },
-    delete: async ({ params, fetch, locals }) => {
+    delete: async ({ params, fetch }) => {
         console.log("Deleting bookmark with slug:", params);
         const bookmarkID = params?.slug;
         if (!bookmarkID) {
             throw new Error("Bookmark ID is required for deletion");
         }
         try {
-            const response = await fetch(`${env.API_URL}/api/bookmarks/${bookmarkID}`, {
+            const response = await fetch(`${API_URL}/api/bookmarks/${bookmarkID}`, {
                 method: "DELETE",
                 mode: "cors",
                 cache: "no-cache",
@@ -143,7 +142,7 @@ export const actions = {
                 headers: {
                     "Content-Type": "application/json",
                     "X-Requested-With": "XMLHttpRequest",
-                    "X-CSRF-Token": locals?.csrfToken || "", // Use CSRF token from locals if available
+                    //"X-CSRF-Token": locals?.csrfToken || "", // Use CSRF token from locals if available
                 },
             });
             const data = await response.json();

@@ -5,11 +5,12 @@
     import { setUserState } from "$lib/state.svelte";
     import "../style.css";
     import "../app.css";
+    import type { User } from "../app";
     interface PageData {
         user: User;
     }
 
-    let { data, children }: { data: PageData, children: any } = $props();
+    let { data, children }: { data: PageData; children: any } = $props();
     let user = setUserState(data.user as User);
 </script>
 

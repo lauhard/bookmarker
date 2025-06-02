@@ -1,6 +1,7 @@
 <script lang="ts">
     import { authClient } from "$lib/auth-client";
     import { redirect } from "@sveltejs/kit";
+    import { getCookieCache } from "better-auth/cookies";
     $effect(() => {
         authClient
             .signOut({

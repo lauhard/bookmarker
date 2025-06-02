@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/private';
+import { API_URL } from '$env/static/private';
 import { redirect } from '@sveltejs/kit';
 import type { Bookmark } from '../../app';
 import type { PageServerLoad } from './$types';
@@ -16,7 +16,7 @@ export const load: PageServerLoad = async (event) => {
         console.error('User ID not found in locals:', event.locals.user);
         throw new Error('User not authenticated');
     }
-    const endpoint = `${env.API_URL}/api/users/${userId}/bookmarks`;
+    const endpoint = `${API_URL}/api/users/${userId}/bookmarks`;
     console.log('Endpoint:', endpoint);
     //fetch the bookmarks from the API
     const response = await fetch(endpoint, {
@@ -37,7 +37,7 @@ export const load: PageServerLoad = async (event) => {
         throw new Error('Failed to fetch bookmarks');
     } else {
         // get the data from the response
-        let bookmarks: { data: Bookmark[] } | undefined = data;
+        const bookmarks: { data: Bookmark[] } | undefined = data;
         // order bookmarks by created_at descending
         if (bookmarks?.data) {
             bookmarks.data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
