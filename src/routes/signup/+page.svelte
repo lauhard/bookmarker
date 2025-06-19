@@ -1,10 +1,9 @@
 <script lang="ts">
     import { applyAction, enhance } from "$app/forms";
-    import { redirect, type ActionResult } from "@sveltejs/kit";
+    import { type ActionResult } from "@sveltejs/kit";
     import { authClient } from "$lib/auth-client";
-    import { goto, invalidateAll } from "$app/navigation";
+    import { invalidateAll } from "$app/navigation";
     import type { ActionData } from "./$types";
-    import { getUserState } from "$lib/state.svelte";
     let { form }: { form: ActionData } = $props();
     let betterAuthStatus = $state("");
     const formEnhance = ({
@@ -52,9 +51,11 @@
     };
 </script>
 
-<section class="section">
-    <h1>Signup</h1>
+<section
+    class="signup flex flex-col items-center justify-center vertical-center"
+>
     <form
+        class="form flex flex-col items-center justify-center px-4 py-8 bg-base-200 rounded-box shadow-md w-full max-w-md"
         method="POST"
         action="?/signup"
         use:enhance={(data) => formEnhance({ ...data })}
@@ -66,10 +67,17 @@
             <p class="error">{betterAuthStatus}</p>
         {/if}
 
-        <fieldset class="fieldset border-base-300 rounded-box w-xs border p-4">
-            <label class="label" for="name"> Name </label>
+        <h1
+            class="text-2xl text-left
+        pb-2 pl-4 w-full text-primary font-bold mb-4"
+        >
+            Create an Account
+        </h1>
+        <fieldset class="fieldset rounded-box mx-4 px-4 w-full flex flex-col">
+            <legend class="text-base px-2 text-gray-400"></legend>
+            <label class="label text-base" for="name"> Name </label>
             <input
-                class="input"
+                class="input input-md w-full mb-3"
                 type="text"
                 name="name"
                 id="name"
@@ -79,9 +87,9 @@
             {#if form?.errors && form.values.name}
                 <p class="error">{form?.errors["name"]}</p>
             {/if}
-            <label class="label" for="email"> Email </label>
+            <label class="label text-base" for="email"> Email </label>
             <input
-                class="input"
+                class="input input-md w-full mb-3"
                 type="email"
                 name="email"
                 id="email"
@@ -91,9 +99,9 @@
             {#if form?.errors && form.values.email}
                 <p class="error">{form?.errors["email"]}</p>
             {/if}
-            <label class="label" for="password"> Password </label>
+            <label class="label text-base" for="password"> Password </label>
             <input
-                class="input"
+                class="input input-md w-full mb-3"
                 type="password"
                 name="password"
                 id="password"
@@ -103,10 +111,21 @@
             {#if form?.errors && form.values.password}
                 <p class="error">{form?.errors["password"]}</p>
             {/if}
-            <button class="btn btn-primary mt-5" type="submit">Signup</button>
+            <button class="btn btn-primary uppercase" type="submit"
+                >Signup</button
+            >
+            <p class="text-base text-gray-500 mt-4">
+                Already have an account? <a
+                    href="/login"
+                    class="link text-primary">Login</a
+                >
+            </p>
         </fieldset>
     </form>
 </section>
 
 <style lang="scss">
+    .signup {
+        margin: auto 0;
+    }
 </style>

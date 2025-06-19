@@ -1,63 +1,148 @@
 <script lang="ts">
-    import { getUserState } from "$lib/state.svelte";
+    import { getUserState } from "$lib/state/user.svelte";
     import { applyAction, enhance } from "$app/forms";
     import { type ActionResult } from "@sveltejs/kit";
-    import { goto } from "$app/navigation";
-    import type { Bookmark } from "../../../app";
+    import { goto, invalidate, invalidateAll } from "$app/navigation";
+    import type { List, ListBookmark } from "../../../app";
+    import { getListStore } from "$lib/state/list.svelte";
+    import { getBookmarkStore } from "$lib/state/bookmarks.svelte";
+    import { page } from "$app/state";
+    import { browser } from "$app/environment";
+    import { getPreviousPage } from "$lib";
 
-    let { data }: { data: Bookmark } = $props();
-    let bookmark: Bookmark = $state(data.bookmark);
+    type BookmarkForm = {
+        error?: string;
+        success?: boolean;
+        message?: string;
+        values?: Record<string, string>;
+        errors?: Record<string, string>;
+    };
+
+    let { data, form }: { data: any; form: BookmarkForm } = $props();
     let user = getUserState();
+    let listStore = getListStore();
+    let bookmark: ListBookmark = $state(data.bookmark);
+    let bookmarkList: List | null = $state(data?.bookmarkList || null);
 
+    listStore.set(data?.userLists || []);
+    /**
+     * NOTE: ListId
+     * ListId is set when a bookmark is being edited
+     * ListId is null when creating a new bookmark
+     */
+    let bookmarkLists: List[] = $state(bookmark?.lists || [bookmarkList]); // Ensure bookmarkLists is initialized correctly
+    let bookmarkListIds = $state("");
     let url = $state(bookmark?.url || "");
-    let title = $state(bookmark?.page_title || "");
+    let pageTitle = $state(bookmark?.pageTitle || "");
     let tags = $state(bookmark?.tags || "");
-    let category = $state(bookmark?.category || "");
-    let notes = $state(bookmark?.notes || "");
-    let favorite = $state(bookmark?.favorite || false);
-    let action = $state(bookmark ? "?/update" : "?/create");
+    let action = $state(bookmark.id ? "?/update" : "?/create");
 
-    const formEnhance = () => {
+    //NOTE: not used for now...
+    let favorite = $state(bookmark?.favorite || false);
+
+    const removeList = (id: number) =>
+        (bookmarkLists = bookmarkLists.filter((l) => l.id !== id));
+
+    const handleListSelect = (event: Event) => {
+        //to make sure we have no invalid values in bookmarkLists
+        bookmarkLists = bookmarkLists.filter((l) => l != null);
+
+        const selectedOptin = event.target as HTMLSelectElement;
+        const selectedId = selectedOptin.value;
+        const selected = $listStore.find((l) => l.id == selectedId);
+        if (selected && !bookmarkLists.some((l) => l?.id === selected.id)) {
+            bookmarkLists = [...bookmarkLists, selected];
+        }
+        //id bookmarkListIds is empty, we set it to the selected list id
+        if (bookmarkLists.length == 0) {
+            bookmarkLists = [...bookmarkLists, selected];
+        }
+        // Reset the select element after selection
+        selectedOptin.value = "";
+    };
+
+    $effect(() => {
+        // Ensure bookmarkListIds is updated correctly when bookmarkLists change
+        if (bookmarkLists.length > 0) {
+            bookmarkListIds = bookmarkLists.map((l) => l?.id).join(",");
+        }
+    });
+
+    //console.log("bookmarkList", JSON.stringify(bookmarkList, null, 2));
+    //console.log("listId", listId);
+    //console.log("userLists", JSON.stringify($listStore, null, 2)); // Corrected to use allLists
+    //console.log("bookmark", JSON.stringify(bookmark, null, 2));
+    const formEnhance = ({
+        formElement,
+        formData,
+        action,
+        cancel,
+    }: {
+        formElement: HTMLFormElement;
+        formData: FormData;
+        action: string | URL;
+        cancel: () => void;
+    }) => {
         return async ({ result }: { result: ActionResult }) => {
             if (result.type !== "success") {
+                console.error("Fehler beim Speichern:", result);
                 await applyAction(result);
             } else {
-                const { bookmarkID } = result.data as { bookmarkID?: string };
-                await goto(`/bookmarks`, {
-                    invalidateAll: true,
-                });
+                const { bookmarkId } = result.data as { bookmarkId: string };
+                form = {
+                    ...form,
+                    success: true,
+                    message: `Bookmark erfolgreich ${bookmarkId} gespeichert.`,
+                };
+                // await goto(previousUrl);
+                window.history.back();
             }
         };
     };
 </script>
 
-<section class="w-full px-4 sm:px-6 lg:px-12 xl:px-20 max-w-screen-xl mx-auto">
-    <h1
-        class="text-2xl sm:text-3xl font-light text-center mb-6 dark:text-white"
-    >
-        {bookmark ? title : title === "" ? "Neues Lesezeichen" : title}
-    </h1>
-
+<section class=" flex flex-col items-center justify-center vertical-center">
+    {#if form?.success === false}
+        <p class="text-red-500 text-center">{form?.error}</p>
+    {/if}
     <form
         {action}
         method="POST"
         use:enhance={formEnhance}
-        class="space-y-6 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow p-6"
+        class="form flex flex-col items-center justify-center px-4 py-8 bg-base-200 rounded-box shadow-md w-full max-w-md"
     >
-        <fieldset class="space-y-4">
+        <h1
+            class="text-2xl text-left
+        pb-2 pl-4 w-full text-primary font-bold mb-4"
+        >
+            {#if pageTitle === ""}
+                {#if bookmarkList}
+                    Add Bookmark to <span class="text-accent"
+                        >"{bookmarkList?.name ?? "default"}"</span
+                    >
+                {:else}
+                    New Bookmark
+                {/if}
+            {:else}
+                Bookmark: <span class="text-accent">"{pageTitle}"</span>
+            {/if}
+        </h1>
+        <fieldset class="fieldset rounded-box mx-4 px-4 w-full flex flex-col">
             {#if bookmark}
-                <input type="hidden" name="bookmarkID" value={bookmark?.id} />
+                <input type="hidden" name="bookmarkId" value={bookmark?.id} />
             {/if}
             {#if bookmark == null}
-                <input type="hidden" name="userID" value={user.id} />
+                <input type="hidden" name="userId" value={user.id} />
             {/if}
-
+            {#if bookmarkListIds}
+                <input
+                    type="hidden"
+                    name="bookmarkListIds"
+                    value={bookmarkListIds}
+                />
+            {/if}
             <div>
-                <label
-                    for="url"
-                    class="block text-sm font-medium text-zinc-700 dark:text-zinc-200"
-                    >URL</label
-                >
+                <label for="url" class="label text-base">Url</label>
                 <input
                     id="url"
                     name="url"
@@ -66,97 +151,115 @@
                     required
                     autocomplete="url"
                     placeholder="https://example.com"
-                    class="mt-1 w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2"
+                    class="input input-md w-full mb-3"
+                    tabindex="0"
+                    title="Bookmark URL"
+                    autofocus
                 />
             </div>
 
             <div>
-                <label
-                    for="title"
-                    class="block text-sm font-medium text-zinc-700 dark:text-zinc-200"
-                    >Titel</label
-                >
+                <label for="pageTitle" class="label text-base">Title</label>
                 <input
-                    id="title"
-                    name="title"
+                    id="pageTitle"
+                    name="pageTitle"
                     type="text"
-                    bind:value={title}
+                    bind:value={pageTitle}
                     required
                     placeholder="Seitentitel"
-                    class="mt-1 w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2"
+                    class="input input-md w-full mb-3 capitalize"
                 />
+                {#if form?.errors && form?.values?.pageTitle}
+                    <p class="error">{form?.errors["pageTitle"]}</p>
+                {/if}
             </div>
 
             <div>
-                <label
-                    for="tags"
-                    class="block text-sm font-medium text-zinc-700 dark:text-zinc-200"
-                    >Tags</label
-                >
+                <label for="tags" class="label text-base">Tags</label>
                 <input
                     id="tags"
                     name="tags"
                     type="text"
                     bind:value={tags}
                     placeholder="z. B. frontend, svelte, dev"
-                    class="mt-1 w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2"
+                    class="input input-md w-full mb-3 capitalize"
                 />
             </div>
 
-            <div>
-                <label
-                    for="category"
-                    class="block text-sm font-medium text-zinc-700 dark:text-zinc-200"
-                    >Kategorie</label
+            <!-- Closing the if statement for bookmarkLists -->
+            <!-- Dropdown for Lists-->
+            <label for="list" class="label text-base"> Collections </label>
+            <select
+                class="select select-accent w-full mb-1"
+                id="list"
+                name="list"
+                onchange={handleListSelect}
+            >
+                <option value="" class="label text-base"
+                    >Choose a Collection</option
                 >
-                <input
-                    id="category"
-                    name="category"
-                    type="text"
-                    bind:value={category}
-                    placeholder="z. B. Tutorials, Tools, Docs"
-                    class="mt-1 w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2"
-                />
+                {#each $listStore as list}
+                    <option
+                        class="capitalize"
+                        value={list.id}
+                        disabled={bookmarkLists?.some((l) => l?.id === list.id)}
+                    >
+                        {list.name}
+                    </option>
+                {/each}
+            </select>
+
+            <div class="flex flex-wrap gap-2 mb-4">
+                {#each bookmarkLists as list}
+                    {#if list?.name}
+                        <!-- content here -->
+                        <span
+                            class="badge badge-accent badge-outline badge-md flex items-center capitalize"
+                        >
+                            {list?.name}
+                            <button
+                                type="button"
+                                class="ml-2 text-accent hover:text-secondary"
+                                onclick={() => removeList(list.id)}
+                            >
+                                &times;
+                            </button>
+                        </span>
+                    {/if}
+                {/each}
             </div>
 
-            <div>
-                <label
-                    for="notes"
-                    class="block text-sm font-medium text-zinc-700 dark:text-zinc-200"
-                    >Notizen</label
-                >
-                <!-- svelte-ignore element_invalid_self_closing_tag -->
-                <textarea
-                    id="notes"
-                    name="notes"
-                    bind:value={notes}
-                    rows="3"
-                    placeholder="Optional – persönliche Gedanken oder Zusammenfassung"
-                    class="mt-1 w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2"
-                />
-            </div>
+            <label
+                for="favorite"
+                class="label text-base flex flex-row-reverse w-full items-center justify-end gap-2"
+                >Mark as favorite
 
-            <div class="flex items-center gap-2">
                 <input
+                    type="checkbox"
                     id="favorite"
                     name="favorite"
-                    type="checkbox"
                     bind:checked={favorite}
-                    class="h-4 w-4 text-blue-600 border-gray-300 rounded dark:bg-zinc-800 dark:border-zinc-600"
+                    class="checkbox checkbox-accent"
                 />
-                <label
-                    for="favorite"
-                    class="text-sm text-zinc-700 dark:text-zinc-300"
-                    >Als Favorit markieren</label
-                >
-            </div>
-
-            <div class="pt-4 text-right">
+            </label>
+            <div
+                class="pt-4 flex sm:flex-row flex-col gap-3 justify-between items-center w-full"
+            >
                 <button
                     type="submit"
-                    class="inline-flex items-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm transition"
+                    class="btn btn-primary btn-md w-full sm:w-auto"
+                    aria-label="Speichern"
+                    tabindex="0"
+                    title="Speichern"
                 >
-                    Speichern
+                    Save
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-error btn-md w-full sm:w-auto"
+                    onclick={() => history.back()}
+                >
+                    Discard
                 </button>
             </div>
         </fieldset>
@@ -164,9 +267,7 @@
 </section>
 
 <style lang="scss">
-    .section-base {
-        display: flex;
-        width: 100%;
-        align-items: center;
+    section {
+        margin: auto 0;
     }
 </style>

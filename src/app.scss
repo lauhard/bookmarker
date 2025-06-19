@@ -7,37 +7,36 @@ html, body {
   font-family: sans-serif;
 }
 :root {
-    --color-primary: #007bff;
-    --color-secondary: #6c757d;
-    --color-success: #28a745;
-    --color-danger: #dc3545;
-    --color-warning: #ffc107;
-    --color-info: #17a2b8;
-    --color-light: #f8f9fa;
-    --color-dark: #343a40;
-
+    --color-primary: #32a1c2;
+    --color-accent: #ba9c49;
+    --color-accent: #49ba6d;
+    --color-accent-content:#4f4a4a;
     --content-width: 70rem;
     --side: 2rem;
 }
-.userName {
-    text-transform: capitalize;
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-primary: #32a1c2;
+        --color-accent: #49ba6d;
+
+    }
 }
+
+h1, h2, h3, h4, h5, h6 {
+   // color:var(--color-primary)
+}
+
 .section-base {
     display: flex;
     flex-direction: column;
     align-self: center;
     height: 100%;
-    padding-inline: var(--side);
     max-width: var(--content-width);
     width: 100%;
     box-sizing: border-box;
     margin-top: 1rem;
-    padding: 1.5rem 2rem;
-    background-color: rgba(27, 24, 24, 0.521);
+    background-color: var(--color-base-300);
     border-radius: 1rem;
     min-height: 200px;
-}
-h1{
-    font-size: 2.5rem;
-    margin: 0;
 }

@@ -1,13 +1,30 @@
-const Routes = [
+export const Navigation = [
     {
         path: "/",
-        name: "Bookmarker",
-        isPublic: true,
-    },
-    {
-        path: "/dashboard",
         name: "Dashboard",
         isPublic: false,
     },
+    {
+        path: "/bookmarks",
+        name: "All Bookmarks",
+        isPublic: false,
+    },
 ];
-export default Routes;
+export const Profile = [
+    {
+        path: "/profile",
+        name: "Profile",
+        isPublic: true,
+    },
+    {
+        path: "/settings",
+        name: "Settings",
+        isPublic: false,
+    },
+    {
+        path: "/logout",
+        name: "Logout",
+        isPublic: false,
+    }
+
+];

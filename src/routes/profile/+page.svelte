@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getUserState } from "$lib/state.svelte";
+    import { getUserState } from "$lib/state/user.svelte";
     const user = getUserState();
 </script>
 
@@ -8,5 +8,4 @@
 </section>
 
 <style lang="scss">
-
 </style>

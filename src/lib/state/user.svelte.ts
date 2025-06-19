@@ -1,8 +1,8 @@
 import { getContext, setContext } from "svelte";
-import type { User } from "../app";
+import type { User } from "../../app";
 
 
-const USER_CTX = "USER_CTX";
+const USER_CTX = Symbol('user');
 export function setUserState(user: User) {
     const userState = $state<User>(user);
     setContext(USER_CTX, userState);
