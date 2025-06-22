@@ -10,7 +10,7 @@
         <a href="/bookmarks/add" class="btn btn-primary">Add Bookmark</a>
     </div>
 {:else}
-    <ul class="list bg-base-100 shadow-md rounded-box">
+    <ul class="list bg-base-100 shadow-md rounded-lg overflow-hidden">
         <li
             class="w-full p-4 pb-2 text-base opacity-70 flex flex-row space-between items-center"
         >

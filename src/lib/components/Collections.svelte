@@ -2,9 +2,6 @@
     import type { List } from "../../app";
     let { lists }: { lists: List[] } = $props();
     import Collection from "$lib/components/Collection.svelte";
-    import { page } from "$app/state";
-
-    let editMode = $state(false);
 </script>
 
 {#if lists?.length === 0}
@@ -20,16 +17,9 @@
                 Created Collections
                 <span class="text-accent">({lists.length})</span>
             </div>
-            <button
-                class="btn btn-accent btn-sm sm:btn-md btn-outline"
-                aria-label="Edit Collections"
-                onclick={() => (editMode = !editMode)}
-            >
-                {editMode ? "Done" : "Edit Collections"}
-            </button>
         </li>
         {#each lists as list, index}
-            <Collection {editMode} {list} />
+            <Collection {list} />
         {/each}
     </ul>
 {/if}

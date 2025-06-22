@@ -105,3 +105,22 @@ export function setLocalStorage<T>(key: string, value: T) {
         console.warn(`Could not save ${key} to localStorage`, err);
     }
 }
+
+export function isValidGoogleFavicon(img: HTMLImageElement, callback: (isValid: boolean) => void) {
+    let isGenericFavicon = true;
+    // Google returns a 16x16 favicon as fallback for invalid domains
+    if (img.naturalWidth <= 16 && img.naturalHeight <= 16) {
+        // if its fallback we use the fallback function
+        isGenericFavicon = false;
+    }
+    callback(isGenericFavicon)
+}
+
+export const onLoadFavicon = (event: Event, url: string) => {
+    const img = event.currentTarget as HTMLImageElement;
+    isValidGoogleFavicon(img, (isValid: boolean) => {
+        if (!isValid) {
+            img.src = `https://icons.duckduckgo.com/ip3/${new URL(url).hostname}.ico`;
+        }
+    });
+};

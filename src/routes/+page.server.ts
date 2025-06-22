@@ -7,7 +7,7 @@ export const load: PageServerLoad = async (event) => {
     if (event.locals.user) {
         const originUrl = event.url.origin;
         console.log("originUrl", originUrl);
-        throw redirect(302, `${originUrl}/dashboard`);
+        throw redirect(302, `${originUrl}/bookmarks`);
     }
 
 }

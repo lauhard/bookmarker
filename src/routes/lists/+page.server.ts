@@ -1,7 +1,7 @@
 import { fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import type { List } from "../../app";
-import { createList, getListsForUserData } from "$lib/api";
+import { createList, getListsForUserData, updateList } from "$lib/api";
 
 
 export const load: PageServerLoad = async (event) => {
@@ -17,12 +17,14 @@ export const load: PageServerLoad = async (event) => {
         throw new Error('User not authenticated');
     }
     const response = await getListsForUserData(userId);
+    let lists: List[] = [];
     if (!response.ok) {
         console.error('Error fetching bookmarks:', response.message);
         throw redirect(307, '/error'); // oder: throw error(500, 'Interner Fehler');
     } else {
-        const lists: List[] = response.data;
-        // order bookmarks by created_at descending
+        lists = response.data;
+        // order by updatedAt
+        lists.sort((a, b) => (new Date(a.createdAt || 0).getDate()) - (new Date(b.createdAt || 0).getDate()));
         return {
             lists: lists || [],
             totalCount: lists.length || 0,
@@ -59,6 +61,36 @@ export const actions = {
             return fail(500, {
                 success: false,
                 error: error || 'Fehler beim Speichern.',
+            });
+        }
+    },
+    update: async ({ request, locals }) => {
+        const formData = await request.formData();
+        const list: List = {
+            id: formData.get("id") as string,
+            userId: locals.user?.id || '', // Ensure userId is set from locals
+            name: formData.get("name") as string,
+            isPublic: formData?.get("isPublic") == "true" ? true : false, // Ensure isPublic is set from form data
+        }
+        try {
+            const response = await updateList(list);
+            if (!response.ok) {
+                console.error("Error updating list:", response.message);
+                return fail(500, {
+                    success: false,
+                    error: response?.message || 'Fehler beim Aktualisieren.',
+                });
+            }
+            return {
+                success: true,
+                message: "List updated successfully.",
+                data: response.data
+            };
+        } catch (error) {
+            console.error("Error updating list:", error);
+            return fail(500, {
+                success: false,
+                error: error || 'Fehler beim Aktualisieren.',
             });
         }
     }

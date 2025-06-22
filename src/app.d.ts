@@ -24,6 +24,7 @@ declare global {
             userId: string; // Assuming userId is a string, adjust if it's a number
             name: string;
             isPublic: boolean;
+            sortOrder?: number; // Optional field for sort order
             createdAt?: Date;
             updatedAt?: Date;
         }

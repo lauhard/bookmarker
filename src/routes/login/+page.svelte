@@ -33,7 +33,7 @@
                          * remember the user session after the browser is closed.
                          * @default true
                          */
-                        callbackURL: "/dashboard",
+                        callbackURL: "/bookmarks",
                         //rememberMe: true,
                     },
                     {

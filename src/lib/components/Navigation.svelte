@@ -38,7 +38,7 @@
 
         <a
             class="btn btn-ghost text-xl w-fit text-primary flex items-center justify-center align-middle text-center vertical-center leading-snug"
-            href="/"
+            href="/bookmarks"
             >Book<svg
                 class="inline w-[1em] align-middle text-accent text-center"
                 height="auto"
@@ -58,7 +58,7 @@
                 <ul
                     class="menu menu-horizontal text-center flex items-center justify-center vertical-center align-middle text-md text-base-content/75 font-semibold"
                 >
-                    <li><a href="/bookmarks">All Bookmarks</a></li>
+                    <li><a href="/dashboard">Dashboard</a></li>
                 </ul>
             {/if}
         </div>

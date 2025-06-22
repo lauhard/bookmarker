@@ -5,6 +5,12 @@
     let { data } = $props();
     const listStore = getListStore();
     listStore.set(data.lists || []);
+
+    $effect(() => {
+        if (data.lists) {
+            listStore.set(data.lists);
+        }
+    });
 </script>
 
 <section class="section-base sm:p-5 p-2 pt-5">

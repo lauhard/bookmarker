@@ -1,12 +1,12 @@
 export const Navigation = [
     {
-        path: "/",
-        name: "Dashboard",
+        path: "/bookmarks",
+        name: "Bookmarks",
         isPublic: false,
     },
     {
-        path: "/bookmarks",
-        name: "All Bookmarks",
+        path: "/dashboard",
+        name: "Dashboard",
         isPublic: false,
     },
 ];

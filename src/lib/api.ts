@@ -111,6 +111,16 @@ export async function deleteList(listId: string): Promise<ApiResponse<string | n
     console.debug('Response from deleteList:', JSON.stringify(response, null, 2));
     return response as ApiResponse<string | null>;
 }
+export async function updateList(list: List): Promise<ApiResponse<string | null>> {
+    const ENDPOINT_UPDATE_LIST = `${env.PUBLIC_API_URL}/api/lists/${list.id}`;
+    console.debug('Updating list at endpoint:', ENDPOINT_UPDATE_LIST);
+    const response = await _fetch(ENDPOINT_UPDATE_LIST, {
+        method: 'PATCH',
+        body: JSON.stringify(list),
+    });
+    console.debug('Response from updateList:', JSON.stringify(response, null, 2));
+    return response as ApiResponse<string | null>;
+}
 //#endregion
 
 

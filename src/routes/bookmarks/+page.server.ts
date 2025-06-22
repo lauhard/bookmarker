@@ -2,7 +2,7 @@ import { redirect } from '@sveltejs/kit';
 //import type { Bookmark } from '../../app';
 import type { PageServerLoad } from './$types';
 import type { ListBookmark, UserSettings } from '../../app';
-import { getBookmarksForUser, getBookmarksForUserByList, getUserSettings } from '$lib/api';
+import { getBookmarksForUser, getBookmarksForUserByList, getListsForUserData, getUserSettings } from '$lib/api';
 import { getListnameOfBookmark } from '$lib';
 //import { getBookmarksForUser } from '$lib/api';
 
@@ -32,6 +32,7 @@ export const load: PageServerLoad = async (event) => {
             throw new Error('Failed to fetch bookmarks for the collection');
         }
         bookmarks = response.data;
+        listName = getListnameOfBookmark(bookmarks[0]);
     }
     else {
         const response = await getBookmarksForUser(userId);
@@ -45,7 +46,6 @@ export const load: PageServerLoad = async (event) => {
     // Order bookmarks by createdAt descending
     if (bookmarks.length > 0) {
         bookmarks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        listName = getListnameOfBookmark(bookmarks[0]);
     }
 
     let settings: UserSettings = {};
@@ -59,10 +59,16 @@ export const load: PageServerLoad = async (event) => {
         settings = response.data;
     }
 
+    let lists: ListBookmark[] = [];
+    const response = await getListsForUserData(userId);
+    if (response.ok) {
+        lists = response.data;
+    }
     return {
         bookmarks: bookmarks || [],
         listName: listName,
-        settings: settings
+        settings: settings,
+        lists: lists
     };
 }
 

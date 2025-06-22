@@ -2,7 +2,7 @@
     let { showModal = $bindable(false), collectionId } = $props();
 </script>
 
-<div class="fixed bottom-6 right-6 z-100 bg-transparent flex lg:hidden">
+<div class="fixed bottom-6 right-6 z-[99999] bg-transparent flex lg:hidden">
     <div class="dropdown dropdown-top dropdown-end rounded-full shadow-2xl">
         <div
             tabindex="0"

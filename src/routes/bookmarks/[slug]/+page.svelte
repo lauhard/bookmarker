@@ -2,13 +2,8 @@
     import { getUserState } from "$lib/state/user.svelte";
     import { applyAction, enhance } from "$app/forms";
     import { type ActionResult } from "@sveltejs/kit";
-    import { goto, invalidate, invalidateAll } from "$app/navigation";
     import type { List, ListBookmark } from "../../../app";
     import { getListStore } from "$lib/state/list.svelte";
-    import { getBookmarkStore } from "$lib/state/bookmarks.svelte";
-    import { page } from "$app/state";
-    import { browser } from "$app/environment";
-    import { getPreviousPage } from "$lib";
 
     type BookmarkForm = {
         error?: string;
@@ -30,7 +25,8 @@
      * ListId is set when a bookmark is being edited
      * ListId is null when creating a new bookmark
      */
-    let bookmarkLists: List[] = $state(bookmark?.lists || [bookmarkList]); // Ensure bookmarkLists is initialized correctly
+
+    let bookmarkLists: List[] = $state(bookmark?.lists || [data?.bookmarkList]); // Ensure bookmarkLists is initialized correctly
     let bookmarkListIds = $state("");
     let url = $state(bookmark?.url || "");
     let pageTitle = $state(bookmark?.pageTitle || "");
@@ -65,6 +61,18 @@
         // Ensure bookmarkListIds is updated correctly when bookmarkLists change
         if (bookmarkLists.length > 0) {
             bookmarkListIds = bookmarkLists.map((l) => l?.id).join(",");
+        }
+    });
+
+    // if existing bookomark gets loaded
+    $effect(() => {
+        if (data.bookmark && data.bookmark.id) {
+            console.log("a Bookmark loaded:", data.bookmark);
+            url = data.bookmark.url || "";
+            pageTitle = data.bookmark.pageTitle || "";
+            tags = data.bookmark.tags || "";
+            bookmarkList = data.bookmarkList || null;
+            bookmarkLists = data.bookmark.lists || [bookmarkList];
         }
     });
 
@@ -154,7 +162,6 @@
                     class="input input-md w-full mb-3"
                     tabindex="0"
                     title="Bookmark URL"
-                    autofocus
                 />
             </div>
 

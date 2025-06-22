@@ -36,7 +36,7 @@
                             console.log("onSuccess", data);
                             await invalidateAll();
                             await applyAction(result);
-                            window.location.href = "/dashboard";
+                            window.location.href = "/bookmarks";
                         },
                         onError: async (error) => {
                             const { status, message } = error.error;
