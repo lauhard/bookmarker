@@ -10,7 +10,7 @@ html, body {
 
 :root {
   --color-primary: #32a1c2;
-  --color-accent: #ba9c49;
+  /*--color-accent: #ba9c49;*/
   --color-accent: #49ba6d;
   --color-accent-content:#4f4a4a;
   --content-width: 70rem;

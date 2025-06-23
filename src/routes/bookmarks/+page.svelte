@@ -110,7 +110,7 @@
         >
             <div class="flex flex-row items-center gap-2 w-full">
                 <button
-                    class="btn btn-circle text-base-content"
+                    class="btn btn-circle text-base-content/70"
                     onclick={() => {
                         showFilter =
                             showFilter === "flex h-fit opacity-100"
@@ -145,7 +145,11 @@
                         : "All Bookmarks"}
                 </h1>
                 <div class="dropdown dropdown-end">
-                    <div tabindex="0" role="button" class="btn btn-circle">
+                    <div
+                        tabindex="0"
+                        role="button"
+                        class="btn btn-circle text-base-content/70"
+                    >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"

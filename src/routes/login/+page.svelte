@@ -64,7 +64,7 @@
     class="login flex flex-col items-center justify-center vertical-center"
 >
     <form
-        class="form flex flex-col items-center justify-center px-4 py-8 bg-base-200 rounded-box shadow-md w-full max-w-md"
+        class="form flex flex-col items-center justify-center px-4 py-8 bg-base-200 rounded-box shadow-md w-full max-w-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 ease-in-out"
         method="POST"
         action="?/login"
         use:enhance={(data) => formEnhance({ ...data })}
@@ -100,25 +100,27 @@
                 Password
             </label>
             <input
-                class="input input-md w-full mb-3"
+                class="input input-md w-full"
                 type="password"
                 name="password"
                 id="login_password"
                 required
                 autocomplete="current-password"
             />
+            <a class="link text-base link-primary mb-3" href="/forgot-password"
+                >Forgot Password?</a
+            >
             {#if form?.errors && form.values.password}
                 <p class="error">{form?.errors["password"]}</p>
             {/if}
-            <button class="btn btn-primary" type="submit">Login</button>
-            <p class="text-base mt-4 text-gray-500">
+            <button
+                class="btn btn-lg btn-full text-white font-bold
+                           bg-gradient-to-r from-primary to-accent border-none"
+                type="submit">Login</button
+            >
+            <p class="text-lg text-gray-500 mt-2">
                 Don't have an account?
-                <a class="link link-primary" href="/signup">Sign up</a>
-            </p>
-            <p class="text-base">
-                <a class="link link-primary" href="/forgot-password"
-                    >Forgot Password?</a
-                >
+                <a class="link link-primary" href="/signup"> Sign up</a>
             </p>
         </fieldset>
     </form>
@@ -127,5 +129,13 @@
 <style lang="scss">
     .login {
         margin: auto 0;
+    }
+    .page-background {
+        /* Fallback color from DaisyUI variables */
+        background-color: hsl(var(--b2));
+        /* The SVG Background Image */
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 1000'%3e%3crect fill='%23111827' width='1000' height='1000'/%3e%3cdefs%3e%3cradialGradient id='a' cx='500' cy='500' r='400' gradientUnits='userSpaceOnUse'%3e%3cstop offset='0' stop-color='%231f2937'/%3e%3cstop offset='1' stop-color='%23111827'/%3e%3c/radialGradient%3e%3cradialGradient id='b' cx='500' cy='500' r='600' gradientUnits='userSpaceOnUse'%3e%3cstop offset='0' stop-color='%23374151' stop-opacity='1'/%3e%3cstop offset='1' stop-color='%23374151' stop-opacity='0'/%3e%3c/radialGradient%3e%3c/defs%3e%3crect fill='url(%23a)' width='1000' height='1000'/%3e%3cg fill-opacity='0.4'%3e%3crect fill='url(%23b)' width='1000' height='1000'/%3e%3crect fill='url(%23b)' width='1000' height='1000'/%3e%3c/g%3e%3c/svg%3e");
+        background-size: cover;
+        background-position: center;
     }
 </style>

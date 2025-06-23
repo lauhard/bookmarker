@@ -42,7 +42,7 @@
         const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
         const isModKey = isMac ? event.metaKey : event.ctrlKey;
 
-        if (isModKey && event.key.toLowerCase() === "k") {
+        if (isModKey && event.key.toLowerCase() === "f") {
             event.preventDefault();
             showSearchModal = true;
         }
@@ -53,9 +53,11 @@
             collectionId = page.url.searchParams.get("collectionId") || "";
         }
     });
+
+    let scrollY = $state(0);
 </script>
 
-<svelte:window onkeydown={onKeydown} />
+<svelte:window onkeydown={onKeydown} bind:scrollY />
 
 <FulltextSearch bind:showSearchModal></FulltextSearch>
 
@@ -67,11 +69,15 @@
 <Aside routes={navigationRoutes} bind:show={showAsideMenu}></Aside>
 
 <div class="app bg-base-300">
-    <header class="  sticky top-0 z-50 shadow bg-base-100">
+    <header
+        class="  sticky top-0 z-50 border-b {scrollY > 0
+            ? 'shadow-md border-black/10 bg-base-300'
+            : 'shadow-none border-black/0 bg-base-300'}  transition-all duration-800 ease-in-out"
+    >
         <Navigation {user} bind:showAsideProfile bind:showAsideMenu>
             {#if user && user.name !== ""}
                 <div
-                    class="hidden lg:flex flex-col sm:flex-row mx-auto w-full sm:justify-end gap-6 pr-2 bg-base-100"
+                    class="hidden lg:flex flex-col sm:flex-row mx-auto w-full sm:justify-end gap-6 pr-2"
                 >
                     <div
                         class="flex flex-col sm:flex-row gap-2 ws-full sm:w-auto justify-center items-center sm:justify-end"
@@ -80,7 +86,7 @@
                             href={collectionId
                                 ? `/bookmarks/add?collectionId=${collectionId}`
                                 : "/bookmarks/add"}
-                            class="btn btn-primary btn-md w-full sm:w-auto"
+                            class="btn btn-primary btn-md w-auto uppercase tracking-wider text-xs font-bolder"
                             aria-label="New Bookmark"
                             title="New Bookmark"
                         >
@@ -99,11 +105,11 @@
                                     d="M8 12h8"
                                 /><path d="M12 8v8" /></svg
                             >
-                            Add Bookmark
+                            Bookmark
                         </a>
                         <button
                             type="button"
-                            class="btn btn-base btn-md w-full sm:w-auto"
+                            class="btn btn-base btn-base btn-md text-base-content/70 w-auto uppercase tracking-wider text-xs font-bolder"
                             onclick={() => (showCollectionModal = true)}
                         >
                             <svg
@@ -121,7 +127,7 @@
                                     d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"
                                 /></svg
                             >
-                            Add Collection
+                            Collection
                         </button>
                     </div>
                 </div>

@@ -49,7 +49,7 @@
         <li>
             <button
                 onmouseup={close}
-                class="m-3 p-0.5 btn-xs btn btn-ghost btn-accent btn-circle shadow-2xl close"
+                class="m-3 p-0.5 btn-xs btn btn-ghost btn-primary btn-circle shadow-2xl close"
                 type="button"
                 title="Close Aside"
                 aria-live="polite"
@@ -76,14 +76,14 @@
     >
         {#each routes as route, i}
             <li
-                class="m-0 p-0 w-full flex items-center bg-base-100/50 text-base-content justify-center vertical-center max-inline-size-full h-[3rem] rounded-lg"
+                class="m-0 p-0 w-full flex items-center bg-base-100/50 text-base-content/70 justify-center vertical-center max-inline-size-full h-[3rem] rounded-sm"
                 class:active={isActive(route.path)}
                 style:transform="translateX( {fromLeft == true
                     ? translateX - i * 50
                     : translateX + i * 50}%)"
             >
                 <a
-                    class="w-full h-full hover:text-accent text-center flex justify-center items-center vertical-center route-aside"
+                    class="w-full h-full hover:text-primary text-center flex justify-center items-center vertical-center route-aside"
                     href={(route as Route).path}
                     onmouseup={close}
                 >
@@ -131,12 +131,13 @@
     @keyframes slideIn {
         from {
             opacity: 0;
-            background: var(--color-accent);
+            background: var(--color-primary);
         }
         to {
             transform: translateX(0);
             opacity: 1;
             margin-block: 0.1rem;
+            background: var(--color-base-100);
         }
     }
 </style>

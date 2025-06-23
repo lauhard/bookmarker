@@ -8,7 +8,7 @@
     } = $props();
 </script>
 
-<nav class="navbar bg-base-100 shadow-sm">
+<nav class="navbar">
     <div class="navbar-start">
         {#if user && user.name !== ""}
             <button
@@ -37,12 +37,12 @@
         {/if}
 
         <a
-            class="btn btn-ghost text-xl w-fit text-primary flex items-center justify-center align-middle text-center vertical-center leading-snug"
+            class="btn btn-ghost text-xl w-fit bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent flex items-center justify-center align-middle text-center vertical-center leading-snug"
             href="/bookmarks"
             >Book<svg
-                class="inline w-[1em] align-middle text-accent text-center"
+                class="inline w-[1em] h-[1em] align-middle text-primary"
                 height="auto"
-                viewBox="0 0 60 60"
+                viewBox="0 0 64 64"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
             >
@@ -50,8 +50,7 @@
                     d="M16 4H24L32 14L40 4H48C50.2091 4 52 5.79086 52 8V56L33 46L12 60V8C12 5.79086 13.7909 4 16 4Z"
                     fill="currentColor"
                 />
-            </svg>
-            arker</a
+            </svg>arker</a
         >
         <div class="navbar-center hidden lg:flex">
             {#if user && user.name !== ""}

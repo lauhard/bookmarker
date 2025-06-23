@@ -5,6 +5,7 @@
     import { getListStore, setListStore } from "$lib/state/list.svelte";
     import type { ActionResult } from "@sveltejs/kit";
     import { invalidateAll } from "$app/navigation";
+    import { slide } from "svelte/transition";
     let {
         showCollectionModal = $bindable(false),
         collectionId = $bindable(null),
@@ -61,49 +62,57 @@
 </script>
 
 <Modal bind:showModal={showCollectionModal}>
-    <h2 class="text-2xl font-semibold mb-4 mt-4 text-primary">
-        {title}
-    </h2>
-    <form
-        class="flex flex-col"
-        method="POST"
-        {action}
-        use:enhance={formEnhance}
-    >
-        <!-- list public -->
-        <div class="form-control mb-4">
-            <input type="text" name="id" value={collectionId} hidden />
-            <label class="label cursor-pointer">
-                <span class="label-text" class:public={isPublic}
-                    >Public List</span
-                >
-                <input
-                    type="checkbox"
-                    name="isPublic"
-                    value={isPublic}
-                    class="toggle toggle-accent"
-                    bind:checked={isPublic}
-                />
-            </label>
-            <p class="text-sm text-base-content/70 font-bold mt-1">
-                A public list can be viewed by anyone.
-            </p>
-        </div>
+    <div class="pb-4" transition:slide>
+        <h2
+            class="text-2xl font-bold sm:mt-0 mt-6 my-5 sm:text-center text-primary"
+        >
+            {title}
+        </h2>
 
-        <label for="name" class="label">List Name</label>
-        <div class="flex flex-row flex-wrap items-start gap-4">
-            <div class="flex-[1_1_200px] grow">
-                <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    bind:value={listName}
-                    placeholder="Enter list name"
-                    class="input input-md w-full"
-                    required
-                />
+        <form
+            class="flex flex-col gap-6"
+            method="POST"
+            {action}
+            use:enhance={formEnhance}
+        >
+            <!-- list public -->
+            <div class="form-control mb-4">
+                <input type="text" name="id" value={collectionId} hidden />
+                <label class="label cursor-pointer mb-1">
+                    <span class="label-text" class:public={isPublic}
+                        >Public List</span
+                    >
+                    <input
+                        type="checkbox"
+                        name="isPublic"
+                        value={isPublic}
+                        class="toggle toggle-accent"
+                        bind:checked={isPublic}
+                    />
+                </label>
+                <p class="label-text-alt text-base-content/70">
+                    A public list can be viewed by anyone.
+                </p>
             </div>
-            <button type="submit" class="btn btn-primary">{btnText}</button>
-        </div>
-    </form>
+            <div class="form-control">
+                <label for="name" class="label">List Name</label>
+                <div class="flex flex-row flex-wrap items-start gap-4">
+                    <div class="flex-[1_1_200px] grow">
+                        <input
+                            id="name"
+                            name="name"
+                            type="text"
+                            bind:value={listName}
+                            placeholder="Enter list name"
+                            class="input input-md w-full"
+                            required
+                        />
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                        >{btnText}</button
+                    >
+                </div>
+            </div>
+        </form>
+    </div>
 </Modal>

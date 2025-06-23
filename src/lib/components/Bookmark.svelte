@@ -34,12 +34,12 @@
         class="list-none"
     >
         <article
-            class="flex flex-col sm:flex-row items-start gap-3 mb-2 sm:gap-4 p-3 pb-0 sm:p-4 bg-base-200/50 hover:bg-base-200 border-base-300/70 border hover:rounded-xl transition-all duration-300"
+            class="flex flex-col sm:flex-row items-start gap-3 mb-2 sm:gap-4 p-3 sm:p-4 pb-2 bg-base-200/50 hover:bg-base-200 border-base-300/30 border transition-all duration-300"
             aria-labelledby="bookmark-title-{bookmark.id}"
         >
             <div class="flex-1 flex flex-col min-w-0 w-full">
                 <header
-                    class="flex flex-row border-base-300/70 pb-4 {Object.values(
+                    class="flex flex-row border-base-300/70 pb-4 mb-2 {Object.values(
                         $settingStore[0],
                     ).filter((e) => e == false).length == 4
                         ? 'sm:border-b'
@@ -82,7 +82,7 @@
                     </div>
                     <!-- Action Buttons (volle Höhe)-->
                     <div
-                        class="hidden sm:flex flex-row justify-end items-center self-start"
+                        class=" flex flex-row justify-end items-center self-start"
                     >
                         <a
                             href={`/bookmarks/${bookmark.id}`}
@@ -141,11 +141,11 @@
                     {#if $settingStore[0]?.showDescription}
                         <!-- article body-->
                         <div
-                            class="ml-0 sm:ml-17 justify-center flex flex-col h-fit mt-2"
+                            class="ml-0 sm:ml-17 justify-center flex flex-col h-fit"
                         >
                             <!-- Description -->
                             <p
-                                class="text h-full w-full text-sm text-base-content/80 leading-relaxed"
+                                class="text h-full w-full text-sm text-base-content/80 leading-relaxed sm:pb-1 pb-0"
                             >
                                 Lorem ipsum dolor sit amet consectetur
                                 adipisicing elit. Alias perferendis debitis quis
@@ -250,45 +250,15 @@
                     {/if}
                 </div>
                 <!-- Footer -->
-
-                <!-- Action Buttons mobile -->
-                <div
-                    class=" border-t border-base-300/70 flex justify-end gap-0 sm:hidden p-0 m-0 py-2"
-                >
-                    <a
-                        href={`/bookmarks/${bookmark?.id}`}
-                        class="btn btn-xs btn-ghost h-10 text-primary"
-                        aria-label="Edit"
+                {#if false == true}
+                    <!-- content here -->
+                    <div
+                        class=" border-t border-base-300/70 flex justify-end gap-0 sm:hidden p-0 m-0 py-2"
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            class="lucide lucide-square-pen-icon lucide-square-pen"
-                            ><path
-                                d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                            /><path
-                                d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"
-                            /></svg
-                        >
-                    </a>
-
-                    <form
-                        method="POST"
-                        action={`/bookmarks/${bookmark.id}/?/delete`}
-                        use:enhance={formEnhance}
-                        class="inline m-0 p-0 w-fit h-fit"
-                    >
-                        <button
-                            type="submit"
-                            class="btn btn-xs btn-ghost h-10 hover:bg-base-300 text-error"
-                            aria-label="Delete"
+                        <a
+                            href={`/bookmarks/${bookmark?.id}`}
+                            class="btn btn-xs btn-ghost h-10 text-primary"
+                            aria-label="Edit"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -300,14 +270,46 @@
                                 stroke-width="2"
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
-                                class="lucide lucide-circle-x-icon lucide-circle-x"
-                                ><circle cx="12" cy="12" r="10" /><path
-                                    d="m15 9-6 6"
-                                /><path d="m9 9 6 6" /></svg
+                                class="lucide lucide-square-pen-icon lucide-square-pen"
+                                ><path
+                                    d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                                /><path
+                                    d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"
+                                /></svg
                             >
-                        </button>
-                    </form>
-                </div>
+                        </a>
+
+                        <form
+                            method="POST"
+                            action={`/bookmarks/${bookmark.id}/?/delete`}
+                            use:enhance={formEnhance}
+                            class="inline m-0 p-0 w-fit h-fit"
+                        >
+                            <button
+                                type="submit"
+                                class="btn btn-xs btn-ghost h-10 hover:bg-base-300 text-error"
+                                aria-label="Delete"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-circle-x-icon lucide-circle-x"
+                                    ><circle cx="12" cy="12" r="10" /><path
+                                        d="m15 9-6 6"
+                                    /><path d="m9 9 6 6" /></svg
+                                >
+                            </button>
+                        </form>
+                    </div>
+                {/if}
+                <!-- Action Buttons mobile -->
             </div>
         </article>
     </li>

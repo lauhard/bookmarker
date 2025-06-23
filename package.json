@@ -38,6 +38,7 @@
     "dependencies": {
         "better-auth": "^1.2.7",
         "pg": "^8.16.0",
+        "svelte-intersection-observer": "^1.0.0",
         "zod": "^3.24.4"
     }
 }

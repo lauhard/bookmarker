@@ -55,7 +55,7 @@
     class="signup flex flex-col items-center justify-center vertical-center"
 >
     <form
-        class="form flex flex-col items-center justify-center px-4 py-8 bg-base-200 rounded-box shadow-md w-full max-w-md"
+        class="form flex flex-col items-center justify-center px-4 py-8 bg-base-200 rounded-box shadow-md w-full max-w-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 ease-in-out"
         method="POST"
         action="?/signup"
         use:enhance={(data) => formEnhance({ ...data })}
@@ -111,10 +111,13 @@
             {#if form?.errors && form.values.password}
                 <p class="error">{form?.errors["password"]}</p>
             {/if}
-            <button class="btn btn-primary uppercase" type="submit"
-                >Signup</button
+            <button
+                class="btn btn-lg btn-full text-white font-bold
+                           bg-gradient-to-r from-primary to-accent border-none
+                           "
+                type="submit">Signup</button
             >
-            <p class="text-base text-gray-500 mt-4">
+            <p class="text-lg text-gray-500 mt-2">
                 Already have an account? <a
                     href="/login"
                     class="link text-primary">Login</a
