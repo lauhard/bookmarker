@@ -8,16 +8,17 @@ export const Navigation = [
         path: "/dashboard",
         name: "Dashboard",
         isPublic: false,
-    },
+    }
+
 ];
 export const Profile = [
     {
-        path: "/profile",
+        path: "/me/profile",
         name: "Profile",
         isPublic: true,
     },
     {
-        path: "/settings",
+        path: "/me/settings",
         name: "Settings",
         isPublic: false,
     },

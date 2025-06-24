@@ -25,7 +25,9 @@
     >
         Manage your collections, tags and favourites.
         <br />
-        Use the sidebar to navigate through your collections and favourites.
+        You can update or remove them in the respective sections.
+        <br />
+        You can even share your collections with others by sharing the link.
     </p>
     <div class="collapse collapse-arrow bg-base-100 mb-4">
         <input type="checkbox" bind:checked={openStates[0]} />

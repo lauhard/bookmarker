@@ -60,7 +60,7 @@
                             <a
                                 id="bookmark-title-{bookmark.id}"
                                 href={bookmark.url}
-                                class="text-base sm:text-lg font-bold text-primary underline break-words capitalize"
+                                class="text-base sm:text-lg font-bold text-primary underline break-all text-pretty capitalize"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
@@ -250,65 +250,7 @@
                     {/if}
                 </div>
                 <!-- Footer -->
-                {#if false == true}
-                    <!-- content here -->
-                    <div
-                        class=" border-t border-base-300/70 flex justify-end gap-0 sm:hidden p-0 m-0 py-2"
-                    >
-                        <a
-                            href={`/bookmarks/${bookmark?.id}`}
-                            class="btn btn-xs btn-ghost h-10 text-primary"
-                            aria-label="Edit"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="lucide lucide-square-pen-icon lucide-square-pen"
-                                ><path
-                                    d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                                /><path
-                                    d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"
-                                /></svg
-                            >
-                        </a>
 
-                        <form
-                            method="POST"
-                            action={`/bookmarks/${bookmark.id}/?/delete`}
-                            use:enhance={formEnhance}
-                            class="inline m-0 p-0 w-fit h-fit"
-                        >
-                            <button
-                                type="submit"
-                                class="btn btn-xs btn-ghost h-10 hover:bg-base-300 text-error"
-                                aria-label="Delete"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    class="lucide lucide-circle-x-icon lucide-circle-x"
-                                    ><circle cx="12" cy="12" r="10" /><path
-                                        d="m15 9-6 6"
-                                    /><path d="m9 9 6 6" /></svg
-                                >
-                            </button>
-                        </form>
-                    </div>
-                {/if}
                 <!-- Action Buttons mobile -->
             </div>
         </article>

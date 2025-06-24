@@ -13,20 +13,20 @@
             </div>
             <div class="flex justify-center gap-x-6">
                 <a
-                    href="https://github.com/dein-repo"
+                    href="https://github.com/lauhard/bookmarker"
                     target="_blank"
                     class="hover:text-primary text-base-content/70 transition-colors"
                     >GitHub</a
                 >
                 <a
-                    href="/impressum"
+                    href="/legal-notice"
                     class="hover:text-primary text-base-content/70 transition-colors"
-                    >Impressum</a
+                    >Legal Notice</a
                 >
                 <a
-                    href="/datenschutz"
+                    href="/privacy"
                     class="hover:text-primary text-base-content/70 transition-colors"
-                    >Datenschutz</a
+                    >Privacy</a
                 >
             </div>
         </div>

@@ -25,6 +25,8 @@
     let initialized = $state(false);
     let showFilter = $state("hidden h-0 opacity-0");
     let qury = $state("");
+    let innerWidth = $state(0);
+    let found = $state(false);
     $effect(() => {
         if (page.url.searchParams)
             collectionId = page.url.searchParams.get("collectionId") || "";
@@ -62,26 +64,48 @@
             settingStore.updateStore(current.id, updates);
         }
     });
-    $effect(() => {
-        if (qury !== "") {
-            debounce(() => {
-                let filtered = $bookmarkStore.filter(
-                    (b) =>
-                        b.pageTitle
-                            .toLowerCase()
-                            .includes(qury.toLowerCase()) ||
-                        b.url.toLowerCase().includes(qury.toLowerCase()),
-                );
-                if (filtered.length > 0) {
-                    bookmarkStore.set(filtered);
-                } else {
-                    bookmarkStore.set(data.bookmarks || []);
-                }
-            }, 500)();
+
+    // Filter bookmarks based on the query
+    function filterBookmarks(e: KeyboardEvent) {
+        if (qury === "") {
+            found = false;
+            bookmarkStore.set(data.bookmarks || []);
+            return;
+        }
+        let filtered = $bookmarkStore.filter(
+            (b) =>
+                b.pageTitle.toLowerCase().includes(qury.toLowerCase()) ||
+                b.url.toLowerCase().includes(qury.toLowerCase()),
+        );
+        if (filtered.length > 0) {
+            found = true;
+            bookmarkStore.set(filtered);
         } else {
+            found = false;
             bookmarkStore.set(data.bookmarks || []);
         }
-    });
+    }
+
+    //$effect(() => {
+    //    if (qury) {
+    //        debounce(() => {
+    //            let filtered = $bookmarkStore.filter(
+    //                (b) =>
+    //                    b.pageTitle
+    //                        .toLowerCase()
+    //                        .includes(qury.toLowerCase()) ||
+    //                    b.url.toLowerCase().includes(qury.toLowerCase()),
+    //            );
+    //            if (filtered.length > 0) {
+    //                bookmarkStore.set(filtered);
+    //            } else {
+    //                bookmarkStore.set(data.bookmarks || []);
+    //            }
+    //        }, 500)();
+    //    } else {
+    //        bookmarkStore.set(data.bookmarks || []);
+    //    }
+    //});
     //subscribe to settingStore to get the initial value of showDescription
     settingStore.subscribe(async (settings) => {
         if (initialized == false) {
@@ -101,9 +125,11 @@
     //update settingStore when showDescription changes
 </script>
 
+<svelte:window bind:innerWidth />
+
 <section class=" section-base sm:p-5 p-2 pt-5">
     <div
-        class="flex flex-row flex-start gap-4 items-center vertical-center sm:mb-2"
+        class="flex flex-row flex-start gap-4 items-center vertical-center mb-2"
     >
         <div
             class="menu rounded-lg border-accent-content/10 border-1 text-center flex flex-row justify-between align-middle vertical-center w-full h-fit relative"
@@ -196,38 +222,61 @@
         </div>
     </div>
     <div
-        class={`filter-menu menu-horizontal menu-lg  mb-3 ${showFilter} flex-col md:flex-row allow-descrete flex-1 gap-2 p-2 bg-base-300 rounded-lg border border-base-300 shadow-sm`}
+        class={`filter-menu menu-horizontal menu-lg  mb-3 ${showFilter} flex-col  allow-descrete flex-1 gap-2 p-2 bg-base-300 rounded-lg border border-base-300 shadow-sm`}
     >
         <input
             type="search"
-            class=" input grow md:grow-0 input-bordered"
-            placeholder="Search"
+            class=" input w-full sm:w-[300px] input-bordered"
+            class:border-error={qury !== "" && found == false}
+            aria-label="Filter bookmarks"
+            aria-describedby="filter-bookmarks"
+            placeholder="Filter"
+            onkeyup={(e) => filterBookmarks(e)}
             bind:value={qury}
         />
-        <div class="filter w-full flex flex-row">
-            <a href="/bookmarks" aria-label="All Bookmarks">
-                <input
-                    class="btn filter-reset"
-                    type="radio"
-                    name="collections"
-                    aria-label="All"
-                    checked={collectionId === ""}
-                /></a
+        {#if qury !== "" && innerWidth < 640}
+            <button
+                aria-label="Clear the input to show the collection filter"
+                onclick={() => (qury = "")}
+                class="btn btn-info w-fit h-fit btn-outline text-md py-1 mt-1 mx-auto rounded-2xl font-light cursor-pointer"
+                title="Clear the input to show the collection filter"
+                tabindex="0"
+                aria-describedby="clear-filter"
+                id="clear-filter"
             >
-            {#each $listStore as list (list.id)}
-                <a
-                    href="/bookmarks?collectionId={list.id}"
-                    aria-label={list.name}
-                    ><input
-                        class="btn"
+                <span class="mr-1">X</span>Clear the input to show the
+                collection filter
+            </button>
+        {:else}
+            <div class="filter w-full flex flex-row">
+                <a href="/bookmarks" aria-label="All Bookmarks">
+                    <input
+                        class="btn filter-reset"
                         type="radio"
                         name="collections"
-                        aria-label={list.name}
-                        checked={collectionId === list.id}
+                        aria-label="All"
+                        checked={collectionId === ""}
+                        onclick={() => (qury = "")}
                     /></a
                 >
-            {/each}
-        </div>
+                {#each $listStore.sort((a, b) => {
+                    return a.name.localeCompare(b.name);
+                }) as list (list.id)}
+                    <a
+                        href="/bookmarks?collectionId={list.id}"
+                        onclick={() => (qury = "")}
+                        aria-label={list.name}
+                        ><input
+                            class="btn"
+                            type="radio"
+                            name="collections"
+                            aria-label={list.name}
+                            checked={collectionId === list.id}
+                        /></a
+                    >
+                {/each}
+            </div>
+        {/if}
     </div>
     <!-- Bookmark List -->
     <Bookmarks bookmarks={$bookmarkStore}></Bookmarks>

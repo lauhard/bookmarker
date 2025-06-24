@@ -14,14 +14,15 @@
 
     let listStore = getListStore();
     let action = $state("/lists/?/create");
-    let title = $state("Create new List");
-    let btnText = $state("Create List");
+    let title = $state("Create new Collection");
+    let btnText = $state("Create");
     let listName = $state("");
     $effect(() => {
         if (collectionId) {
+            console.log("Updating collection with ID:", collectionId);
             action = "/lists/?/update";
-            title = "Update List";
-            btnText = "Update List";
+            title = "Update Collection";
+            btnText = "Update";
             listName =
                 $listStore.find((list) => list.id === collectionId)?.name || "";
             isPublic =
@@ -43,19 +44,20 @@
     }) => {
         return async ({ result }: { result: ActionResult }) => {
             if (result.type !== "success") {
-                console.error("Error on saving bookmark:", result);
                 await applyAction(result);
             } else {
-                console.log("List created successfully:", result);
                 const listData = result.data; //TODO: FIX result data
+                await invalidateAll(); // Reload all data to reflect the new bookmark
+                // Reload the page to reflect the new bookmark
+                showCollectionModal = false;
+                if (listData?.message.includes("updated")) {
+                    return;
+                }
                 listStore.add({
                     id: listData?.data?.id,
                     name: formData.get("name") as string,
                     isPublic: isPublic,
                 });
-                await invalidateAll(); // Reload all data to reflect the new bookmark
-                // Reload the page to reflect the new bookmark
-                showCollectionModal = false;
             }
         };
     };

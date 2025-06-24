@@ -41,7 +41,6 @@
             href="/bookmarks"
             >Book<svg
                 class="inline w-[1em] h-[1em] align-middle text-primary"
-                height="auto"
                 viewBox="0 0 64 64"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"

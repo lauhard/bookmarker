@@ -23,8 +23,8 @@ export const load: PageServerLoad = async (event) => {
         throw redirect(307, '/error'); // oder: throw error(500, 'Interner Fehler');
     } else {
         lists = response.data;
-        // order by updatedAt
-        lists.sort((a, b) => (new Date(a.createdAt || 0).getDate()) - (new Date(b.createdAt || 0).getDate()));
+        // order by alphabetical order by name
+        lists.sort((a, b) => a.name.localeCompare(b.name));
         return {
             lists: lists || [],
             totalCount: lists.length || 0,

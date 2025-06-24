@@ -3,9 +3,7 @@
     const user = getUserState();
 </script>
 
-<section class="section-base">
-    <h1><span class="userName">{user.name}</span> Profile</h1>
-</section>
+<h1><span class="userName">{user.name}</span> Profile</h1>
 
 <style lang="scss">
 </style>

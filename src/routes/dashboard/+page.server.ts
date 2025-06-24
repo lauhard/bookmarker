@@ -24,8 +24,8 @@ export const load: PageServerLoad = async (event) => {
 
     } else {
         const lists: List[] = response.data;
-        // order bookmarks by created_at descending
-        lists.sort((a, b) => (new Date(b.createdAt || 0).getTime()) - (new Date(a.createdAt || 0).getTime()));
+        // order lists by name in alphabetical order
+        lists.sort((a, b) => a.name.localeCompare(b.name));
         return {
             lists: lists || [],
         };
