@@ -25,6 +25,8 @@
     import FulltextSearch from "$lib/components/FulltextSearch.svelte";
     import Collection from "$lib/components/Collection.svelte";
     import CollectionModal from "$lib/components/CollectionModal.svelte";
+    import Expander from "$lib/components/Expander.svelte";
+    import FloatingButton from "$lib/components/FloatingButton.svelte";
     let { data, children } = $props();
     let user = setUserState(data.user as User);
 
@@ -68,6 +70,59 @@
 
 <Aside routes={navigationRoutes} bind:show={showAsideMenu}></Aside>
 
+{#snippet newBookmark()}
+    <a
+        href={collectionId
+            ? `/bookmarks/add?collectionId=${collectionId}`
+            : "/bookmarks/add"}
+        class="btn btn-primary btn-md w-auto uppercase tracking-wider text-xs font-bolder"
+        aria-label="New Bookmark"
+        title="New Bookmark"
+    >
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-circle-plus-icon lucide-circle-plus"
+            ><circle cx="12" cy="12" r="10" /><path d="M8 12h8" /><path
+                d="M12 8v8"
+            /></svg
+        >
+        Bookmark
+    </a>
+{/snippet}
+
+{#snippet newCollection()}
+    <button
+        type="button"
+        class="btn btn-primary btn-md w-auto uppercase tracking-wider text-xs font-bolder"
+        onclick={() => (showCollectionModal = true)}
+    >
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-folder-plus-icon lucide-folder-plus"
+            ><path d="M12 10v6" /><path d="M9 13h6" /><path
+                d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"
+            /></svg
+        >
+        Collection
+    </button>
+{/snippet}
+
 <div class="app bg-base-300">
     <header
         class="  sticky top-0 z-50 border-b {scrollY > 0
@@ -82,53 +137,8 @@
                     <div
                         class="flex flex-col sm:flex-row gap-2 ws-full sm:w-auto justify-center items-center sm:justify-end"
                     >
-                        <a
-                            href={collectionId
-                                ? `/bookmarks/add?collectionId=${collectionId}`
-                                : "/bookmarks/add"}
-                            class="btn btn-primary btn-md w-auto uppercase tracking-wider text-xs font-bolder"
-                            aria-label="New Bookmark"
-                            title="New Bookmark"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="20"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="lucide lucide-circle-plus-icon lucide-circle-plus"
-                                ><circle cx="12" cy="12" r="10" /><path
-                                    d="M8 12h8"
-                                /><path d="M12 8v8" /></svg
-                            >
-                            Bookmark
-                        </a>
-                        <button
-                            type="button"
-                            class="btn btn-base btn-base btn-md text-base-content/70 w-auto uppercase tracking-wider text-xs font-bolder"
-                            onclick={() => (showCollectionModal = true)}
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="20"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="lucide lucide-folder-plus-icon lucide-folder-plus"
-                                ><path d="M12 10v6" /><path d="M9 13h6" /><path
-                                    d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"
-                                /></svg
-                            >
-                            Collection
-                        </button>
+                        {@render newBookmark()}
+                        {@render newCollection()}
                     </div>
                 </div>
                 <div class="mr-2">
@@ -142,7 +152,14 @@
         {@render children()}
     </main>
     {#if user && user.name !== ""}
-        <Fab bind:showModal={showCollectionModal} {collectionId}></Fab>
+        <div class="fixed bottom-5 right-5 z-50">
+            <FloatingButton
+                dir="top-right"
+                shape="rounded"
+                element2={newBookmark}
+                element1={newCollection}
+            ></FloatingButton>
+        </div>
     {/if}
     <Footer />
 </div>

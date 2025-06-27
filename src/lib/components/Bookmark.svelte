@@ -6,6 +6,9 @@
     import { getBookmarkStore } from "$lib/state/bookmarks.svelte";
     import { getUserSettingStore } from "$lib/state/userSetting.svelte";
     import { isValidGoogleFavicon, onLoadFavicon } from "$lib";
+    import Expander from "./Expander.svelte";
+    import { goto } from "$app/navigation";
+    import { Home, SquarePen } from "@lucide/svelte";
     let { bookmark } = $props();
 
     //const tags = bookmark?.tags ?? ["tag1", "tag2"];
@@ -28,6 +31,93 @@
     };
 </script>
 
+{#snippet element1()}
+    <a
+        href={`/bookmarks/${bookmark.id}`}
+        class="text-primary btn btn-circle btn-ghost bg-base-300 btn-sm"
+        aria-label="edit"
+    >
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-square-pen-icon lucide-square-pen"
+            ><path
+                d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+            /><path
+                d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"
+            /></svg
+        >
+    </a>
+{/snippet}
+
+{#snippet element2()}
+    <form
+        method="POST"
+        action={`/bookmarks/${bookmark.id}/?/delete`}
+        use:enhance={formEnhance}
+    >
+        <button
+            type="submit"
+            class="btn btn-circle btn-ghost bg-base-300 text-error btn-sm"
+            aria-label="Löschen"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-circle-x-icon lucide-circle-x"
+                ><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path
+                    d="m9 9 6 6"
+                /></svg
+            >
+        </button>
+    </form>
+{/snippet}
+
+{#snippet element3()}
+    <a
+        href={`/bookmarks/${bookmark.id}`}
+        class="text-accent btn btn-circle btn-ghost bg-base-300 btn-sm"
+        aria-label="edit"
+    >
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-share2-icon lucide-share-2"
+            ><circle cx="18" cy="5" r="3" /><circle
+                cx="6"
+                cy="12"
+                r="3"
+            /><circle cx="18" cy="19" r="3" /><line
+                x1="8.59"
+                x2="15.42"
+                y1="13.51"
+                y2="17.49"
+            /><line x1="15.41" x2="8.59" y1="6.51" y2="10.49" /></svg
+        >
+    </a>
+{/snippet}
+
 {#if !isDeleting}
     <li
         out:fly={{ x: -100, opacity: 0, duration: 300, easing: cubicOut }}
@@ -39,11 +129,7 @@
         >
             <div class="flex-1 flex flex-col min-w-0 w-full">
                 <header
-                    class="flex flex-row border-base-300/70 pb-4 mb-2 {Object.values(
-                        $settingStore[0],
-                    ).filter((e) => e == false).length == 4
-                        ? 'sm:border-b'
-                        : 'border-b'}"
+                    class="flex flex-row border-b border-base-300/70 pb-4 mb-2"
                 >
                     <div class="flex items-center flex-1 gap-5 flex-row">
                         <div class="flex-shrink-0">
@@ -82,58 +168,10 @@
                     </div>
                     <!-- Action Buttons (volle Höhe)-->
                     <div
-                        class=" flex flex-row justify-end items-center self-start"
+                        class=" sm:flex flex-row justify-end items-center self-start hidden"
                     >
-                        <a
-                            href={`/bookmarks/${bookmark.id}`}
-                            class="btn btn-ghost text-primary btn-xs w-fit m-0 p-0 py-4 px-2"
-                            aria-label="edit"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="lucide lucide-square-pen-icon lucide-square-pen"
-                                ><path
-                                    d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                                /><path
-                                    d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"
-                                /></svg
-                            >
-                        </a>
-                        <form
-                            method="POST"
-                            action={`/bookmarks/${bookmark.id}/?/delete`}
-                            use:enhance={formEnhance}
-                        >
-                            <button
-                                type="submit"
-                                class="btn btn-ghost text-error btn-xs w-fit m-0 p-0 py-4 px-2"
-                                aria-label="Löschen"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    class="lucide lucide-circle-x-icon lucide-circle-x"
-                                    ><circle cx="12" cy="12" r="10" /><path
-                                        d="m15 9-6 6"
-                                    /><path d="m9 9 6 6" /></svg
-                                >
-                            </button>
-                        </form>
+                        <Expander dir="left" {element1} {element2} {element3}
+                        ></Expander>
                     </div>
                 </header>
                 <!-- bdody + footer -->
@@ -252,6 +290,18 @@
                 <!-- Footer -->
 
                 <!-- Action Buttons mobile -->
+                <div
+                    class="flex flex-row justify-between items-center mt-0 sm:hidden flex-end self-end"
+                >
+                    <!--
+
+                    --><Expander
+                        dir="left"
+                        {element1}
+                        {element2}
+                        {element3}
+                    ></Expander>
+                </div>
             </div>
         </article>
     </li>

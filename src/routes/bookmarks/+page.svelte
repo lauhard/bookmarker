@@ -27,6 +27,7 @@
     let qury = $state("");
     let innerWidth = $state(0);
     let found = $state(false);
+
     $effect(() => {
         if (page.url.searchParams)
             collectionId = page.url.searchParams.get("collectionId") || "";
@@ -65,64 +66,28 @@
         }
     });
 
-    // Filter bookmarks based on the query
     function filterBookmarks(e: KeyboardEvent) {
-        if (qury === "") {
-            found = false;
-            bookmarkStore.set(data.bookmarks || []);
-            return;
-        }
-        let filtered = $bookmarkStore.filter(
+        $bookmarkStore = data.bookmarks || [];
+        found = true;
+        $bookmarkStore = $bookmarkStore.filter(
             (b) =>
                 b.pageTitle.toLowerCase().includes(qury.toLowerCase()) ||
                 b.url.toLowerCase().includes(qury.toLowerCase()),
         );
-        if (filtered.length > 0) {
+        if ($bookmarkStore.length > 0) {
             found = true;
-            bookmarkStore.set(filtered);
         } else {
             found = false;
-            bookmarkStore.set(data.bookmarks || []);
         }
     }
 
-    //$effect(() => {
-    //    if (qury) {
-    //        debounce(() => {
-    //            let filtered = $bookmarkStore.filter(
-    //                (b) =>
-    //                    b.pageTitle
-    //                        .toLowerCase()
-    //                        .includes(qury.toLowerCase()) ||
-    //                    b.url.toLowerCase().includes(qury.toLowerCase()),
-    //            );
-    //            if (filtered.length > 0) {
-    //                bookmarkStore.set(filtered);
-    //            } else {
-    //                bookmarkStore.set(data.bookmarks || []);
-    //            }
-    //        }, 500)();
-    //    } else {
-    //        bookmarkStore.set(data.bookmarks || []);
-    //    }
-    //});
-    //subscribe to settingStore to get the initial value of showDescription
     settingStore.subscribe(async (settings) => {
         if (initialized == false) {
             return;
         }
-        const response = await updateUserSettings(
-            settings[0].userId,
-            $settingStore[0],
-        );
-        if (response.ok) {
-            console.log("Settings updated successfully");
-        } else {
-            console.error("Failed to update settings", response);
-        }
+        await updateUserSettings(settings[0].userId, $settingStore[0]);
         initialized = false; // Prevents re-initialization
     });
-    //update settingStore when showDescription changes
 </script>
 
 <svelte:window bind:innerWidth />
@@ -221,13 +186,14 @@
             </div>
         </div>
     </div>
+
     <div
         class={`filter-menu menu-horizontal menu-lg  mb-3 ${showFilter} flex-col  allow-descrete flex-1 gap-2 p-2 bg-base-300 rounded-lg border border-base-300 shadow-sm`}
     >
         <input
             type="search"
             class=" input w-full sm:w-[300px] input-bordered"
-            class:border-error={qury !== "" && found == false}
+            class:border-error={$bookmarkStore.length === 0 && found == false}
             aria-label="Filter bookmarks"
             aria-describedby="filter-bookmarks"
             placeholder="Filter"
@@ -267,7 +233,7 @@
                         onclick={() => (qury = "")}
                         aria-label={list.name}
                         ><input
-                            class="btn"
+                            class="btn capitalize"
                             type="radio"
                             name="collections"
                             aria-label={list.name}

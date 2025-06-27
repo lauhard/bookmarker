@@ -22,6 +22,7 @@
         "@tailwindcss/forms": "^0.5.9",
         "@tailwindcss/typography": "^0.5.15",
         "@tailwindcss/vite": "^4.1.7",
+        "@types/animejs": "^3.1.13",
         "@types/pg": "^8.15.1",
         "autoprefixer": "^10.4.21",
         "daisyui": "^5.0.35",
@@ -36,6 +37,8 @@
         "vite": "^6.2.6"
     },
     "dependencies": {
+        "@lucide/svelte": "^0.523.0",
+        "animejs": "^4.0.2",
         "better-auth": "^1.2.7",
         "pg": "^8.16.0",
         "svelte-intersection-observer": "^1.0.0",
